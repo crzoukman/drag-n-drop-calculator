@@ -1,4 +1,5 @@
 # Getting Started with Drag-n-Drop Calculator
+`Deploy:` https://crzoukman-drag-n-drop-calculator.netlify.app/
 
 ## `How to Start`
 
