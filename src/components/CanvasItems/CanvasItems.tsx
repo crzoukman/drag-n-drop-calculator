@@ -27,7 +27,7 @@ const CanvasItems: FC<ICanvasItems> = ({
               onDoubleClick={() => removeHandler('result')}
               style={{ cursor: 'default' }}
             >
-              <Result />
+              <Result isActive={true} />
             </ControllerWrapperStyled>
           );
         }

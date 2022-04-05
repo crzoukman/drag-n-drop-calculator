@@ -47,7 +47,7 @@ const Controllers: FC = () => {
           onDragEnd={(e) => dragEndHandler(e)}
           isUsed={isResultControllerUsed}
         >
-          <Result />
+          <Result isActive={false} />
         </ControllerWrapperStyled>
 
         <ControllerWrapperStyled
