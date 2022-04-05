@@ -8,7 +8,12 @@ interface IProps {
   calculationHandler?: (data: string) => void;
 }
 
-const OperatorController: FC<IProps> = ({ children, isOnCanvas, isCanvasFull, calculationHandler }) => {
+const OperatorController: FC<IProps> = ({
+  children,
+  isOnCanvas,
+  isCanvasFull,
+  calculationHandler
+}) => {
 
   return (
     <WrapperStyled

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type TDragableItem = 'result' | 'operator' | 'number' | 'equal';
 
-interface IDragableItem {
+export interface IDragableItem {
   element: TDragableItem;
 }
 

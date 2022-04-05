@@ -25,7 +25,10 @@ const Controllers: FC = () => {
 
   const isCanvasFull = canvasItems.length === config.MAX_CANVAS_LENGTH;
 
-  const dragStartHandler = (e: React.DragEvent<HTMLDivElement>, type: TDragableItem) => {
+  const dragStartHandler = (
+    e: React.DragEvent<HTMLDivElement>,
+    type: TDragableItem
+  ) => {
     dispatch(setIsDragging(true));
     dispatch(setDragableItem({ element: type }));
   };

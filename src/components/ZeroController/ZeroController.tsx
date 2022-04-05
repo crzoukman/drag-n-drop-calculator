@@ -7,7 +7,11 @@ interface IProps {
   calculationHandler?: (arg: string) => void;
 }
 
-const ZeroController: FC<IProps> = ({ isOnCanvas, isCanvasFull, calculationHandler }) => {
+const ZeroController: FC<IProps> = ({
+  isOnCanvas,
+  isCanvasFull,
+  calculationHandler
+}) => {
 
   return (
     <WrapperStyled

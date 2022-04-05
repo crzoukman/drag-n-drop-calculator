@@ -8,3 +8,4 @@ export { default as NumberController } from './NumberController';
 export { default as ZeroController } from './ZeroController';
 export { default as EqualController } from './EqualController';
 export { default as Result } from './Result';
+export { default as CanvasItems } from './CanvasItems';

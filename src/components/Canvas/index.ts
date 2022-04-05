@@ -1,3 +1,3 @@
-import Canvas from "./Canvas";
+import Canvas from "./Canvas.container";
 
 export default Canvas;

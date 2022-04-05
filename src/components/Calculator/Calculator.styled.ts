@@ -6,7 +6,6 @@ export const WrapperStyled = styled.div`
   padding-right: 80px;
   padding-top: 38px;
   padding-bottom: 54px;
-  border: 1px dashed bisque;
 `;
 
 export const ButtonsStyled = styled.div`

@@ -4,7 +4,10 @@ import { WrapperStyled } from "./Result.styled";
 
 
 const Result: FC = () => {
-  const { result, isResultControllerUsed } = useTypedSelector(state => state.main);
+  const {
+    result,
+    isResultControllerUsed
+  } = useTypedSelector(state => state.main);
 
   return (
     <WrapperStyled isUsed={isResultControllerUsed} >
