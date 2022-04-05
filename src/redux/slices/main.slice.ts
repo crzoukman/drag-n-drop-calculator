@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type TDragableItem = 'result' | 'operator' | 'number' | 'equal' | 'line';
+export type TDragableItem = 'result' | 'operator' | 'number' | 'equal';
 
 interface IDragableItem {
   element: TDragableItem;
@@ -8,7 +8,7 @@ interface IDragableItem {
 
 export interface IActiveButton {
   activeButton: 'runtime' | 'constructor';
-  result: number;
+  result: number | string;
   isDragging: boolean;
   canvasItems: IDragableItem[];
   dragableItem: IDragableItem | null;
@@ -16,6 +16,7 @@ export interface IActiveButton {
   isOperatorsControllerUsed: boolean;
   isNumbersControllerUsed: boolean;
   isEqualControllerUsed: boolean;
+  calculation: string;
 }
 
 export type TActiveButton = 'runtime' | 'constructor';
@@ -30,6 +31,7 @@ const initialState: IActiveButton = {
   isOperatorsControllerUsed: false,
   isNumbersControllerUsed: false,
   isEqualControllerUsed: false,
+  calculation: '',
 };
 
 export const mainSlice = createSlice({
@@ -65,10 +67,22 @@ export const mainSlice = createSlice({
     setIsEqualControllerUsed: (state, action: PayloadAction<boolean>) => {
       state.isEqualControllerUsed = action.payload;
     },
-    putLineOnTheTop: (state) => {
-      const filtred = state.canvasItems.filter(item => item.element !== 'line');
-      filtred.push({ element: 'line' });
+    removeItemFromCanvas: (state, action: PayloadAction<TDragableItem>) => {
+      const filtred = state.canvasItems.filter(item => {
+        return item.element !== action.payload;
+      });
+
       state.canvasItems = filtred;
+    },
+    setResult: (state, action: PayloadAction<number | string>) => {
+      state.result = action.payload;
+    },
+    setCalculation: (state, action: PayloadAction<string>) => {
+      state.calculation = state.calculation + action.payload;
+      state.result = state.calculation;
+    },
+    resetCalculation: (state) => {
+      state.calculation = '';
     },
   },
 });
@@ -82,7 +96,10 @@ export const {
   setIsOperatorsControllerUsed,
   setIsNumbersControllerUsed,
   setIsEqualControllerUsed,
-  putLineOnTheTop,
+  removeItemFromCanvas,
+  setResult,
+  setCalculation,
+  resetCalculation,
 } = mainSlice.actions;
 
 export default mainSlice.reducer;

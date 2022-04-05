@@ -3,7 +3,7 @@ import { WrapperStyled } from "./ConstructorButton.styled";
 import { ReactComponent as Brackets } from 'assets/brackets.svg';
 import { useTypedDispatch } from "redux/hooks/useTypedDispatch";
 import { useTypedSelector } from "redux/hooks/useTypedSelector";
-import { setActiveButton } from "redux/slices/main.slice";
+import { setActiveButton, setResult } from "redux/slices/main.slice";
 
 const eyeStyles = {
   width: '20px',

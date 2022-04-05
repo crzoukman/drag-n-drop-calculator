@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const WrapperStyled = styled.div`
+export const WrapperStyled = styled.div<{ isUsed: boolean }>`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -13,7 +13,7 @@ export const WrapperStyled = styled.div`
   font-family: 'Inter';
   font-style: normal;
   font-weight: 800;
-  font-size: 36px;
+  font-size: ${({ isUsed }) => isUsed ? '18px' : '36px'};
   line-height: 44px;
   padding-right: 8px;
   overflow: hidden;

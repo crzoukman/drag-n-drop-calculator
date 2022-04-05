@@ -1,6 +1,11 @@
 import styled from "styled-components"
 
-export const WrapperStyled = styled.div`
+interface IWrapperStyled {
+  isOnCanvas?: boolean;
+  isCanvasFull?: boolean;
+}
+
+export const WrapperStyled = styled.div<IWrapperStyled>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,4 +20,9 @@ export const WrapperStyled = styled.div`
   line-height: 15px;
   color: white;
   background-color: #5D5FEF;
+
+  cursor: ${({ isOnCanvas, isCanvasFull }) => {
+    if (!isOnCanvas) return 'grab';
+    return isOnCanvas ? 'pointer' : 'default'
+  }};
 `;

@@ -1,6 +1,6 @@
 
 const config = {
-  MAX_CANVAS_LENGTH: 5,
+  MAX_CANVAS_LENGTH: 4,
 };
 
 export default config;

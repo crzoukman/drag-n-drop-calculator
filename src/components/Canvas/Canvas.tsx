@@ -3,7 +3,7 @@ import { HeaderStyled, InnerWrapperStyled, LineStyled, TextStyled, WrapperStyled
 import { ReactComponent as Image } from 'assets/image.svg'
 import { useTypedSelector } from "redux/hooks/useTypedSelector";
 import { useTypedDispatch } from "redux/hooks/useTypedDispatch";
-import { addItemtoCanvas, putLineOnTheTop, setIsEqualControllerUsed, setIsNumbersControllerUsed, setIsOperatorsControllerUsed, setIsResultControllerUsed } from "redux/slices/main.slice";
+import { addItemtoCanvas, removeItemFromCanvas, resetCalculation, setCalculation, setIsDragging, setIsEqualControllerUsed, setIsNumbersControllerUsed, setIsOperatorsControllerUsed, setIsResultControllerUsed, setResult, TDragableItem } from "redux/slices/main.slice";
 import OperatorController from "components/OperatorController";
 import { ControllerWrapperStyled } from "components/Controllers/Controllers.styled";
 import { numbersController, operatorsController } from "components/Controllers/config";
@@ -13,57 +13,97 @@ import { v4 as uuidv4 } from 'uuid';
 import EqualController from "components/EqualController";
 import ZeroController from "components/ZeroController";
 import config from "config";
-
-const imageStyles = {
-  width: '20px',
-  height: '20px',
-  marginBottom: '12px',
-};
+import { imageStyles } from "./config";
+import { isValid } from "utils/isValid";
 
 const Canvas: FC = () => {
+
   const {
     isDragging,
     canvasItems,
-    dragableItem
+    dragableItem,
+    activeButton,
+    result,
+    calculation,
   } = useTypedSelector(state => state.main);
   const dispatch = useTypedDispatch();
+
+  console.log(calculation);
 
   const isCanvasEmpty = canvasItems.length === 0;
   const isCanvasFull = canvasItems.length === config.MAX_CANVAS_LENGTH;
 
+  const setWhichControllerIsUsed = (
+    controller: TDragableItem,
+    payload: boolean
+  ) => {
+    if (controller === 'result') {
+      dispatch(setIsResultControllerUsed(payload));
+    }
+
+    if (controller === 'operator') {
+      dispatch(setIsOperatorsControllerUsed(payload));
+    }
+
+    if (controller === 'number') {
+      dispatch(setIsNumbersControllerUsed(payload));
+    }
+
+    if (controller === 'equal') {
+      dispatch(setIsEqualControllerUsed(payload));
+    }
+  };
+
   const dragOverHandler = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    // console.log('zone drag over:', e);
   };
 
   const dropHandler = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log('zone drop:', e);
+
     if (dragableItem) {
-      if (dragableItem.element === 'result') {
-        dispatch(setIsResultControllerUsed(true));
-      }
-
-      if (dragableItem.element === 'operator') {
-        dispatch(setIsOperatorsControllerUsed(true));
-      }
-
-      if (dragableItem.element === 'number') {
-        dispatch(setIsNumbersControllerUsed(true));
-      }
-
-      if (dragableItem.element === 'equal') {
-        dispatch(setIsEqualControllerUsed(true));
-      }
-
+      setWhichControllerIsUsed(dragableItem.element, true);
       dispatch(addItemtoCanvas(dragableItem));
+    };
+  };
 
-      if (canvasItems.length === 0) {
-        dispatch(addItemtoCanvas({ element: 'line' }));
+  const removeHandler = (item: TDragableItem) => {
+    if (activeButton === 'constructor') {
+      dispatch(removeItemFromCanvas(item));
+      setWhichControllerIsUsed(item, false);
+      dispatch(setIsDragging(false));
+    }
+  };
+
+  const calculationHandler = (data: string) => {
+    if (activeButton === 'runtime') {
+      let arg = data;
+      console.log(data)
+      if (data === 'x') arg = '*';
+      if (data === ',') arg = '.';
+
+      dispatch(setCalculation(arg));
+
+    }
+  };
+
+  const evaluationHandler = () => {
+    try {
+      const valid = isValid(calculation);
+      if (!valid) {
+        dispatch(setResult('На ноль делить низзя'));
+        dispatch(resetCalculation());
+        return;
       }
 
-      dispatch(putLineOnTheTop());
-    };
+      const res = eval(calculation);
+      dispatch(setResult(res));
+      dispatch(resetCalculation());
+    } catch (e) {
+      dispatch(setResult('Неверное выражение'));
+      dispatch(resetCalculation());
+    }
+
   };
 
   return (
@@ -72,11 +112,24 @@ const Canvas: FC = () => {
       onDrop={(e) => dropHandler(e)}
       isDragging={isDragging}
       isCanvasEmpty={isCanvasEmpty}
+      activeButton={activeButton}
     >
+      {dragableItem?.element === 'result' && (
+        <LineStyled
+          isDragging={isDragging}
+          isCanvasFull={isCanvasFull}
+          isCanvasEmpty={isCanvasEmpty}
+        />
+      )}
+
       {canvasItems.map(item => {
         if (item.element === 'result') {
           return (
-            <ControllerWrapperStyled key={uuidv4()} >
+            <ControllerWrapperStyled
+              key={uuidv4()}
+              onDoubleClick={() => removeHandler('result')}
+              style={{ cursor: 'default' }}
+            >
               <Result />
             </ControllerWrapperStyled>
           );
@@ -84,9 +137,18 @@ const Canvas: FC = () => {
 
         if (item.element === 'operator') {
           return (
-            <ControllerWrapperStyled key={uuidv4()} >
+            <ControllerWrapperStyled
+              key={uuidv4()}
+              onDoubleClick={() => removeHandler('operator')}
+              isOnCanvas={true}
+            >
               {operatorsController.map(operator =>
-                <OperatorController key={uuidv4()} >
+                <OperatorController
+                  key={uuidv4()}
+                  isOnCanvas={true}
+                  isCanvasFull={isCanvasFull}
+                  calculationHandler={calculationHandler}
+                >
                   {operator}
                 </OperatorController>
               )}
@@ -96,16 +158,33 @@ const Canvas: FC = () => {
 
         if (item.element === 'number') {
           return (
-            <ControllerWrapperStyled key={uuidv4()}>
+            <ControllerWrapperStyled
+              key={uuidv4()}
+              onDoubleClick={() => removeHandler('number')}
+              isOnCanvas={true}
+            >
               {numbersController.map(operator =>
-                <NumberController key={uuidv4()} >
+                <NumberController
+                  key={uuidv4()}
+                  isOnCanvas={true}
+                  isCanvasFull={isCanvasFull}
+                  calculationHandler={calculationHandler}
+                >
                   {operator}
                 </NumberController>
               )}
 
-              <ZeroController />
+              <ZeroController
+                isOnCanvas={true}
+                isCanvasFull={isCanvasFull}
+                calculationHandler={calculationHandler}
+              />
 
-              <NumberController>
+              <NumberController
+                isOnCanvas={true}
+                isCanvasFull={isCanvasFull}
+                calculationHandler={calculationHandler}
+              >
                 ,
               </NumberController>
             </ControllerWrapperStyled>
@@ -114,23 +193,30 @@ const Canvas: FC = () => {
 
         if (item.element === 'equal') {
           return (
-            <ControllerWrapperStyled key={uuidv4()} >
-              <EqualController />
+            <ControllerWrapperStyled
+              key={uuidv4()}
+              onDoubleClick={() => removeHandler('equal')}
+              isOnCanvas={true}
+            >
+              <EqualController
+                isOnCanvas={true}
+                isCanvasFull={isCanvasFull}
+                evaluationHandler={evaluationHandler}
+              />
             </ControllerWrapperStyled>
-          );
-        }
-
-        if (item.element === 'line') {
-          return (
-            <LineStyled
-              isDragging={isDragging}
-              isCanvasFull={isCanvasFull}
-            />
           );
         }
 
         return null;
       })}
+
+      {dragableItem?.element !== 'result' && (
+        <LineStyled
+          isDragging={isDragging}
+          isCanvasFull={isCanvasFull}
+          isCanvasEmpty={isCanvasEmpty}
+        />
+      )}
 
       {isCanvasEmpty &&
         <InnerWrapperStyled>

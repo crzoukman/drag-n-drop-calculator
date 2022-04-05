@@ -3,12 +3,19 @@ import { WrapperStyled } from "./NumberController.styled";
 
 interface IProps {
   children: ReactNode;
+  isOnCanvas?: boolean;
+  isCanvasFull?: boolean;
+  calculationHandler?: (data: string) => void;
 }
 
-const NumberController: FC<IProps> = ({ children }) => {
+const NumberController: FC<IProps> = ({ children, isOnCanvas, isCanvasFull, calculationHandler }) => {
 
   return (
-    <WrapperStyled>
+    <WrapperStyled
+      isOnCanvas={isOnCanvas}
+      isCanvasFull={isCanvasFull}
+      onClick={() => calculationHandler && calculationHandler(String(children))}
+    >
       {children}
     </WrapperStyled>
   );

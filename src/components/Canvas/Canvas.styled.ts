@@ -1,7 +1,15 @@
+import { TActiveButton } from "redux/slices/main.slice";
 import styled from "styled-components";
 
 interface IWrappedStyled {
   isDragging: boolean;
+  isCanvasEmpty: boolean;
+  activeButton: TActiveButton;
+}
+
+interface ILineStyled {
+  isDragging: boolean;
+  isCanvasFull: boolean;
   isCanvasEmpty: boolean;
 }
 
@@ -47,9 +55,11 @@ export const TextStyled = styled.div`
 
 `;
 
-export const LineStyled = styled.div<{ isDragging: boolean, isCanvasFull: boolean }>`
+export const LineStyled = styled.div<ILineStyled>`
   background-color: #5D5FEF;
   height: 2px;
   width: 100%;
-  display: ${({ isDragging, isCanvasFull }) => isDragging && !isCanvasFull ? 'unset' : 'none'};
+  display: ${({ isDragging, isCanvasFull, isCanvasEmpty }) => {
+    return isDragging && !isCanvasFull && !isCanvasEmpty ? 'unset' : 'none';
+  }};
 `;

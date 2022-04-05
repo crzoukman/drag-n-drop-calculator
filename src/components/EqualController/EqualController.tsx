@@ -1,10 +1,20 @@
 import { FC } from "react";
 import { WrapperStyled } from "./EqualController.styled";
 
-const EqualController: FC = () => {
+interface IProps {
+  isOnCanvas?: boolean;
+  isCanvasFull?: boolean;
+  evaluationHandler?: (data: string) => void;
+}
+
+const EqualController: FC<IProps> = ({ isOnCanvas, isCanvasFull, evaluationHandler }) => {
 
   return (
-    <WrapperStyled>
+    <WrapperStyled
+      isOnCanvas={isOnCanvas}
+      isCanvasFull={isCanvasFull}
+      onClick={() => evaluationHandler && evaluationHandler('=')}
+    >
       =
     </WrapperStyled>
   );

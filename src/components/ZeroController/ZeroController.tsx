@@ -1,10 +1,20 @@
 import { FC } from "react";
 import { WrapperStyled } from "./ZeroController.styled";
 
-const ZeroController: FC = () => {
+interface IProps {
+  isOnCanvas?: boolean;
+  isCanvasFull?: boolean;
+  calculationHandler?: (arg: string) => void;
+}
+
+const ZeroController: FC<IProps> = ({ isOnCanvas, isCanvasFull, calculationHandler }) => {
 
   return (
-    <WrapperStyled>
+    <WrapperStyled
+      isOnCanvas={isOnCanvas}
+      isCanvasFull={isCanvasFull}
+      onClick={() => calculationHandler && calculationHandler('0')}
+    >
       0
     </WrapperStyled>
   );
