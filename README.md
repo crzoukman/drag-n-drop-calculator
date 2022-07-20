@@ -1,27 +1,9 @@
-# Getting Started with Drag-n-Drop Calculator
-`Deploy:` https://crzoukman-drag-n-drop-calculator.netlify.app/
+# Drag-n-Drop Calculator
 
-## `How to Start`
+Construct a calculator by pieces and calculate an expression. Selfmade drag-n-drop functionality.
 
-### Clone the repository
-```
-git clone git@github.com:crzoukman/drag-n-drop-calculator.git
-```
-### Install all dependencies
-```
-npm i
-```
-### Launch the app
-```
-npm start
-```
+## Links
 
-## `How to Use`
+- Deploy: https://crzoukman-drag-n-drop-calculator.netlify.app
 
-### Replace tools from the left side on the canvas
-### Switch the mode from `Constructor` to `Runtime`
-### Do your math :)
-
-## `Tips`
-
-### To delete a tool from the canvas - double click it (you must use the runtime mode, not the constructor)
+![drag-n-drop](https://user-images.githubusercontent.com/79852094/180017737-07f9ee17-9daf-4cab-9f5c-2aff65c9901b.png)
